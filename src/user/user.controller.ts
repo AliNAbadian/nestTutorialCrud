@@ -1,28 +1,20 @@
 import { Body, Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
 import { CreateUserDto } from './create-user.dto';
+import { UserService } from './user.service';
+import { User } from 'interfaces/user.interface';
 // import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
+    constructor(private readonly usersService: UserService) {}
+
     @Post()
-    async create(@Body() body: CreateUserDto): Promise<string> {
-        return `User ${body.name} created with email ${body.email}`;
+    create(@Body() CreateUserDto: CreateUserDto): User {
+        return this.usersService.create(CreateUserDto);
     }
-    
+
     @Get()
-    findAll(): string {
-        return 'This action returns all users';
-    }
-    @Get('one')
-    findOne(@Query('age') age: string): string {
-        return 'This action returns a user with age ' + age;
-    }
-    @Get('two')
-    findTwo(@Request() req: Request): string {
-        return 'This action returns a user';
-    }
-    @Get('by/:id') 
-    async findOneById(@Param() params: any): Promise<string> {
-        return 'This action returns a user' + params.id;
+    findAll(): User[] {
+        return this.usersService.findAll()
     }
 }
